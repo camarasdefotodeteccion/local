@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, target-densityDpi=device-dpi, minimum-scale=1.0, maximum-scale = 1.0, user-scalable = no">
+  <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+  <title>Camaras de fotodetección</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="NoSleep.min.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3573324738855745" crossorigin="anonymous"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VSYV8PHYY"></script>
+  <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+     gtag('config', 'G-8VSYV8PHYY');
+  </script>	
+</head>
+<body>
+  <h3>Anticipa las cámaras de fotodetección en el Valle de Aburrá</h3>
+  <button id="btn1" onclick="addClick()"> Haz click para activar</button>
+  <div id="activ"></div>
+  <div id="m">Activa la ubicación en tu teléfono para detectar las camaras cercanas</div>
+  <iframe src="/index2" frameBorder="0" width="100%" height="370px"></iframe>
+</body>
+<script>
+  var x = document.getElementById("m");
+  var y = document.getElementById("activ");
+  const options = {}
+
+  const audio = new Audio("notification.mp3");
+  function addClick() {
+     audio.play();
+     y.innerHTML = "<p>Notificaciones activas, cuando estés aproximadamente a 100 metros de una cámara de fotodetección recibirás un mensaje</p>";
+  }
+  
+  var noSleep = new NoSleep(); 
+  noSleep.enable();
+  
+  navigator.geolocation.watchPosition(({coords}) => {
+      lat =  coords.latitude    
+      lon =  coords.longitude 
+      fun(lat,lon)
+  }, console.error, options);	   
+  	
+  var fun = function(la, lo){
+    $.ajax({
+      url: '/getcity',
+      method : 'POST',
+      data: {"user_lat":la, "user_lon":lo},
+      success : function(data){ 
+        //document.querySelector('#btn1').click();
+        ciudad = data;
+        if(ciudad == "ko"){
+           x.innerHTML = "<p id='mensaje1'>No hay cámaras de fotodetección cerca</p>";
+        } else {
+           document.querySelector('#btn1').click();
+           x.innerHTML = "<p id='mensaje2'>Estás a 100 metros de la cámara de fotodetección de " + ciudad + "</p>";
+        }
+        // x.innerHTML= data;
+      }, error: function(err){console.log('Failed');} 
+    });
+  }
+  
+  
+ 
+</script>	
+</html>
