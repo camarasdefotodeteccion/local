@@ -38,7 +38,7 @@
       url: 'https://camarasdefotodeteccion.com/getcity',
       method : 'POST',
       data: {"user_lat":la, "user_lon":lo},
-      success : function(data){ 
+      success : function(data){  console.log(data)
         //document.querySelector('#btn1').click();
         ciudad = data;
         if(ciudad == "ko"){
